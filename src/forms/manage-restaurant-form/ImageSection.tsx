@@ -1,3 +1,4 @@
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import {
   FormControl,
   FormDescription,
@@ -9,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { useFormContext } from 'react-hook-form';
 
 const ImageSection = () => {
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
+  const existingImageUrl = watch('imageUrl');
 
   return (
     <div className="space-y-2">
@@ -20,7 +22,16 @@ const ImageSection = () => {
           search results. Adding a new image will replace the existing one.
         </FormDescription>
       </div>
-      <div className="flex flex-col gap-8 w-[50%]">
+      <div className="flex flex-col gap-8 md:w-[50%]">
+        {existingImageUrl && (
+          <AspectRatio ratio={16 / 9}>
+            <img
+              className="rounded-md object-cover w-full h-full"
+              src={existingImageUrl}
+              alt="Restaurant"
+            />
+          </AspectRatio>
+        )}
         <FormField
           control={control}
           name="imageFile"
