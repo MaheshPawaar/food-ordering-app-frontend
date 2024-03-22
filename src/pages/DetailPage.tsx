@@ -20,7 +20,7 @@ const DetailPage = () => {
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const addToCart = (menuItem: MenuItem) => [
+  const addToCart = (menuItem: MenuItem) => {
     setCartItems((prevCartItems) => {
       // Check if the item is already in the cart
       const existingCartItem = prevCartItems.find(
@@ -49,8 +49,18 @@ const DetailPage = () => {
         ];
       }
       return updatedCartItems;
-    }),
-  ];
+    });
+  };
+
+  const removeFromCart = (cartItem: CartItem) => {
+    setCartItems((prevCartItems) => {
+      const updatedCartItems = prevCartItems.filter(
+        (item) => cartItem._id !== item._id
+      );
+
+      return updatedCartItems;
+    });
+  };
 
   if (isLoading || !restaurant) {
     return 'Loading...';
@@ -69,12 +79,15 @@ const DetailPage = () => {
           <RestaurantInfo restaurant={restaurant} />
           <span className="text-2xl font-bold tracking-tight">Menu</span>
           {restaurant.menuItems.map((menuItem) => (
-            <MenuItemCard menuItem={menuItem} addToCart={()=>addToCart(menuItem)}/>
+            <MenuItemCard
+              menuItem={menuItem}
+              addToCart={() => addToCart(menuItem)}
+            />
           ))}
         </div>
         <div>
           <Card>
-            <OrderSummary restaurant={restaurant} cartItems={cartItems} />
+            <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={removeFromCart}/>
           </Card>
         </div>
       </div>
